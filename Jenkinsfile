@@ -25,7 +25,10 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'docker run -d -p 8080:80 amirmohammadi60/test-backend:latest'
+                sh '''
+                docker stop backy | true 
+                docker run -d -p8080:80 --name backy amirmohammadi60/test-backend:latest
+                '''
             }
         }
     }
