@@ -4,9 +4,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh '''
-                docker build -t amirmohammadi60/test-backend:APBK-${BUILD_NUMBER} .
-                '''
+                sh 'docker build -t amirmohammadi60/test-backend:APBE-${BUILD_NUMBER} .'
             }
         }
         stage('Push to Docker Registry') {
@@ -14,11 +12,9 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'backend', passwordVariable: 'DOCKER_HUB_PASSWORD', usernameVariable: 'DOCKER_HUB_USERNAME')]) {
                     
                     sh '''
-                    
                       docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD'
                       docker tag test-backend amirmohammadi60/test-backend:latest
                       docker push amirmohammadi60/test-backend:latest
-                      
                    '''  
                 }
             }
@@ -26,7 +22,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                docker stop backy | true 
+                docker stop backy || true 
                 docker run -d -p8080:80 --name backy amirmohammadi60/test-backend:latest
                 '''
             }
