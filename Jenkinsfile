@@ -22,7 +22,7 @@ pipeline {
             steps {
                 sh '''
                 docker stop backy || true 
-                docker run -d -p8080:80 --name backy amirmohammadi60/test-backend:latest
+                docker run -d -p8088:80 --name backy amirmohammadi60/test-backend:latest
                 '''
             }
         }
