@@ -1,8 +1,6 @@
-FROM nginx:1.11-alpine
-
-COPY index.html  /usr/share/nginx/html
-COPY index.js  /usr/share/nginx/html
-COPY personen.csv  /usr/share/nginx/html
+FROM nginx
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY /var/www/html /usr/share/nginx/html
 
 EXPOSE 80
 
