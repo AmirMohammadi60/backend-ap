@@ -1,28 +1,30 @@
 pipeline {
     agent any
-    
+
     stages {
         stage('Build') {
             steps {
-                sh 'sudo docker build -t amirmohammadi60/test-backend:APBE-${BUILD_NUMBER} .'
+              sh '''
+                docker build -t amirmohammadi60/backend-ap:jenkins-${GITHUB_RUN_ID} .
+              '''
             }
         }
-        stage('Push to Docker Registry') {
+        stage('Release') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'backend', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-                    
-                    sh '''
-                      sudo docker login -u $USERNAME -p $PASSWORD
-                      sudo docker push amirmohammadi60/test-backend:APBE-${BUILD_NUMBER}
-                   '''  
-                }
+              withCredentials([usernamePassword(credentialsId: 'dockerhubcredentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                sh '''
+                docker login -u $USERNAME -p $PASSWORD
+                docker push amirmohammadi60/backend-ap:jenkins-${GITHUB_RUN_ID}
+                '''
+              }
             }
         }
-        stage('Deploy') {
+        stage('deploy') {
             steps {
                 sh '''
-                sudo docker stop backy || true 
-                sudo docker run -d -p8088:80 --name backy amirmohammadi60/test-backend:latest
+                docker stop backend-ap || true
+                docker rm -f backend-ap || true
+                docker run -p4000:80 -v /home/deploy/data.csv:/app/data.csv -d --name backend-ap amirmohammadi60/backend-ap:jenkins-${GITHUB_RUN_ID}
                 '''
             }
         }
