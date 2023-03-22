@@ -1,7 +1,9 @@
-FROM nginx
+FROM nginx:1.11-alpine
 
-COPY /var/www/html /usr/share/nginx/html
+ COPY checkInput.js /usr/share/nginx/html
+ COPY readCSV.js /usr/share/nginx/html
+ COPY saveCSV.js /usr/share/nginx/html
+  
+ EXPOSE 80
 
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+ CMD ["nginx", "-g", "daemon off;"]
