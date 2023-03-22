@@ -11,7 +11,7 @@ pipeline {
         }
         stage('Release') {
             steps {
-              withCredentials([usernamePassword(credentialsId: 'dockerhubcredentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+              withCredentials([usernamePassword(credentialsId: 'backend-test', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                 sh '''
                 docker login -u $USERNAME -p $PASSWORD
                 docker push amirmohammadi60/backend-ap:jenkins-${GITHUB_RUN_ID}
